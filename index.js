@@ -1,7 +1,7 @@
 const Koa = require("koa");
 const Router = require("koa-router");
 const { merge } = require("./utils");
-const port = process.MERGE_PORT || 3000;
+const port = process.env.MERGE_PORT || 3000;
 const app = new Koa();
 const router = new Router();
 
