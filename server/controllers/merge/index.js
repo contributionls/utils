@@ -1,17 +1,6 @@
-const Koa = require("koa");
-const Router = require("koa-router");
 const { merge } = require("./utils");
-const port = process.env.MERGE_PORT || 3000;
-const app = new Koa();
-const router = new Router();
 
-router.get("/", async ctx => {
-  // ctx.router available
-  // TODO UI
-  ctx.body = "Hello Koa";
-});
-
-router.get("/merge", async ctx => {
+exports.merge = async function(ctx) {
   const query = ctx.query;
   let urls = query["urls[]"] || query["urls"];
   if (typeof urls === "string") {
@@ -40,8 +29,4 @@ router.get("/merge", async ctx => {
     e.expose = true;
     throw e;
   }
-});
-
-app.use(router.routes()).use(router.allowedMethods());
-app.listen(port);
-console.log("listen at http://localhost:" + port);
+};

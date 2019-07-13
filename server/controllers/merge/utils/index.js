@@ -2,7 +2,7 @@ const path = require("path");
 const mergeJson = require("./merge");
 const debug = require("debug")("merge");
 const axios = require("axios");
-const yamlUtil = require("./yaml");
+const yamlUtil = require("../../../utils/yaml");
 const allowTypes = [".yaml", ".yml", ".json"];
 //options
 // type, default read from suffix,or yaml

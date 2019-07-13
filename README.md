@@ -1,50 +1,63 @@
-# Merge Online
+<p align="center">
+  <a href="" rel="noopener">
+ <img width=200px height=200px src="https://i.imgur.com/ILSznTZ.png" alt="utils men logo"></a>
+</p>
 
-## About <a name = "about"></a>
+<h3 align="center">Utils.men</h3>
 
-Merge your yaml or json config from url online.
+<div align="center">
 
-## Getting Started <a name = "getting_started"></a>
+[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+[![GitHub Issues](https://img.shields.io/github/issues/contributionls/utils.svg)](https://github.com/contributionls/utils/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/contributionls/utils.svg)](https://github.com/contributionls/utils/pulls)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
 
-1. You can visit this site to generate and preview a final url online(TODO): <https://merge.utils.men>
-1. You can also build the final url by yourself,here is the url pattern:
+</div>
 
-```bash
-https://merge.utils.men/merge?urls[]={url}&urls[]={url2}&urls[]={url3}
-```
+---
 
-> You can merge many numbers of urls,the merge strategy is made from the library [deepmerge](https://www.npmjs.com/package/deepmerge)
+<p align="center"> I want offer some online utils for you.
+    <br> 
+</p>
 
-**example:**
+## 📝 Table of Contents
 
-For yaml or yml:
+- [About](#about)
+- [Getting Started](#getting_started)
+- [Deployment](#deployment)
+- [Usage](#usage)
+- [Built Using](#built_using)
+- [TODO](TODO.md)
+- [Contributing](CONTRIBUTING.md)
+- [Authors](#authors)
+- [Acknowledgments](#acknowledgement)
 
-<http://merge.utils.men/merge?urls%5B%5D=https%3A%2F%2Fgist.githubusercontent.com%2Fcontributionls%2F6ab023e9d4c1e17fc3dc13220812ca6f%2Fraw%2Fa.yaml&urls[]=https%3A%2F%2Fgist.githubusercontent.com%2Fcontributionls%2F6ab023e9d4c1e17fc3dc13220812ca6f%2Fraw%2Fb.yaml>
+## 🧐 About <a name = "about"></a>
 
-For json:
+This project offer some useful online tools.
 
-<http://merge.utils.men/merge?urls%5B%5D=https%3A%2F%2Fgist.githubusercontent.com%2Fcontributionls%2F6ab023e9d4c1e17fc3dc13220812ca6f%2Fraw%2Fa.json&urls[]=https%3A%2F%2Fgist.githubusercontent.com%2Fcontributionls%2F6ab023e9d4c1e17fc3dc13220812ca6f%2Fraw%2Fb.json>
+## 🏁 Getting Started <a name = "getting_started"></a>
 
-You can also specific the file type:
+Visit <https://utils.men> for all utils.
 
-<http://merge.utils.men/merge?urls%5B%5D=https%3A%2F%2Fgist.githubusercontent.com%2Fcontributionls%2F6ab023e9d4c1e17fc3dc13220812ca6f%2Fraw%2Fa.json&urls[]=https%3A%2F%2Fgist.githubusercontent.com%2Fcontributionls%2F6ab023e9d4c1e17fc3dc13220812ca6f%2Fraw%2Fb.json&type=json>
+Now we offer follows tools:
 
-## Contribute
+- <https://merge.utils.men> merge yaml/json config online
 
-### develop
+## 🎈 Usage <a name="usage"></a>
 
-```bash
-yarn dev
-```
+Visit [Document](https://utils.men)
 
-### product
+## ⛏️ Built Using <a name = "built_using"></a>
 
-```bash
-yarn start
-```
+- [Docker](https://www.docker.com/) - Development Environment And Production Enviroment
+- [NodeJs](https://nodejs.org/en/) - Server Environment
+- [Koa](https://koajs.com/) - Server Framework
+- [VuePress](https://vuepress.vuejs.org) - Home Framework
+- [Create React App](https://github.com/facebook/create-react-app) - Web Framework
 
-### test
+## ✍️ Authors <a name = "authors"></a>
 
-```bash
-yarn test
-```
+- [@contributionls](https://github.com/contributionls) - Idea & Work
+
+See also the list of [contributors](https://github.com/contributionls/utils/contributors) who participated in this project.

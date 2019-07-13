@@ -1,0 +1,13 @@
+version: "3"
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: DEV.Dockerfile
+    volumes:
+      - ./server:/app:cached
+      - server-node-modules:/app/node_modules/
+    command: ["sh", "-c", "yarn test"]
+
+volumes:
+  server-node-modules:
