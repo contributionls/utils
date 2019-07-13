@@ -1,0 +1,28 @@
+{
+  "foo": {
+    "bar": 3,
+    "baz": 4
+  },
+  "array": [
+    {
+      "does": "work",
+      "too": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "does": "work",
+      "too": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "really": "yes"
+    }
+  ],
+  "quux": 5
+}
