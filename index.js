@@ -33,7 +33,9 @@ router.get("/merge", async ctx => {
       throw error;
     }
   } else {
-    const e = new Error("query urls is invalid.");
+    const e = new Error(
+      "Query urls is invalid.The correct form is https://merge.utils.men/merge?urls[]={url}&urls[]={url2}&urls[]={url3}"
+    );
     e.status = 400;
     e.expose = true;
     throw e;
