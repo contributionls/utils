@@ -14,7 +14,7 @@ HOME_CLIENT_LATEST := ${HOME_CLIENT_NAME}:latest
 build:
 	cd server && docker build -t ${SERVER_LATEST} . && cd ../merge-client && docker build -t ${MERGE_CLIENT_LATEST} . && cd ../home-client && docker build -t ${HOME_CLIENT_LATEST} .
 start:
-	docker-compose up --build
+	docker-compose up
 stop:
 	docker-compose stop
 test:

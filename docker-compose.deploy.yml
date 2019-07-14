@@ -7,6 +7,8 @@ services:
     restart: always
   merge-client:
     image: contributionls/utils-merge-client
+    environment:
+      REACT_APP_API_HOST: "https://api.utils.men"
     ports:
       - "10002:3000"
     restart: always
