@@ -3,17 +3,17 @@ services:
   server:
     image: contributionls/utils-server
     ports:
-      - "10001:4000"
+      - "127.0.0.1:20001:4000"
     restart: always
   merge-client:
     image: contributionls/utils-merge-client
     environment:
       REACT_APP_API_HOST: "https://api.utils.men"
     ports:
-      - "10002:3000"
+      - "127.0.0.1:20002:3000"
     restart: always
   home-client:
     image: contributionls/utils-home-client
     ports:
-      - "10003:8080"
+      - "127.0.0.1:20003:8080"
     restart: always

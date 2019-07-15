@@ -21,10 +21,10 @@ stop:
 	docker-compose stop
 test:
 	docker-compose -f ./docker-compose.test.yml up --build
-deploy:
-	docker-compose -f ./docker-compose.deploy.yml up -d
-stop-deploy:
-	docker-compose -f ./docker-compose.deploy.yml stop
+local-deploy:
+	docker-compose -f ./docker-compose.local.deploy.yml up -d
+stop-local-deploy:
+	docker-compose -f ./docker-compose.local.deploy.yml stop
 merge:
 	docker-compose exec merge-client /bin/sh
 server:
