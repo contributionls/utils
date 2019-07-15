@@ -36,32 +36,36 @@ async function merge(urls, options) {
     for (const iterator of urls) {
       promises.push(axios.get(iterator));
     }
-    const responses = await Promise.all(promises);
-    // debug('response %o',responses)
-    // convert the content to json
-    for (const iterator of responses) {
-      const item = iterator.data;
-      debug("response %s", item);
+    try {
+      const responses = await Promise.all(promises);
+      // debug('response %o',responses)
+      // convert the content to json
+      for (const iterator of responses) {
+        const item = iterator.data;
+        debug("response %s", item);
 
-      if (options.type === "yaml") {
-        jsonArr.push(yamlUtil.yamlToJson(item));
-      } else if (options.type === "json") {
-        jsonArr.push(item);
+        if (options.type === "yaml") {
+          jsonArr.push(yamlUtil.yamlToJson(item));
+        } else if (options.type === "json") {
+          jsonArr.push(item);
+        }
       }
+      let finalResult = {
+        body: "",
+        headers: {}
+      };
+      const mergeResult = mergeJson(jsonArr);
+      if (options.type === "yaml") {
+        finalResult.body = yamlUtil.jsonToYaml(mergeResult);
+        finalResult.type = "text/vnd.yaml";
+      } else if (options.type === "json") {
+        finalResult.body = JSON.stringify(mergeResult, null, 2);
+        finalResult.type = "json";
+      }
+      return finalResult;
+    } catch (error) {
+      throw error;
     }
-    let finalResult = {
-      body: "",
-      headers: {}
-    };
-    const mergeResult = mergeJson(jsonArr);
-    if (options.type === "yaml") {
-      finalResult.body = yamlUtil.jsonToYaml(mergeResult);
-      finalResult.type = "text/vnd.yaml";
-    } else if (options.type === "json") {
-      finalResult.body = JSON.stringify(mergeResult, null, 2);
-      finalResult.type = "json";
-    }
-    return finalResult;
   }
 }
 

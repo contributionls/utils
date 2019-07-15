@@ -4,7 +4,7 @@ exports.merge = async function(ctx) {
   const query = ctx.query;
   let urls = query["urls[]"] || query["urls"];
   if (typeof urls === "string") {
-    urls = [urls];
+    urls = urls.split(",");
   }
   if (Array.isArray(urls)) {
     const options = {};

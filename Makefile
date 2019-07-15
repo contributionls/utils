@@ -1,4 +1,4 @@
-.PHONY: build start test deploy stop-deploy
+.PHONY: build start test deploy stop-deploy build-start
 
 SERVER_NAME   := contributionls/utils-server
 MERGE_CLIENT_NAME   := contributionls/utils-merge-client
@@ -15,6 +15,8 @@ build:
 	cd server && docker build -t ${SERVER_LATEST} . && cd ../merge-client && docker build -t ${MERGE_CLIENT_LATEST} . && cd ../home-client && docker build -t ${HOME_CLIENT_LATEST} .
 start:
 	docker-compose up
+build-start:
+	docker-compose up --build
 stop:
 	docker-compose stop
 test:
@@ -23,3 +25,9 @@ deploy:
 	docker-compose -f ./docker-compose.deploy.yml up -d
 stop-deploy:
 	docker-compose -f ./docker-compose.deploy.yml stop
+merge:
+	docker-compose exec merge-client /bin/sh
+server:
+	docker-compose exec server /bin/sh
+home:
+	docker-compose exec home-client /bin/sh

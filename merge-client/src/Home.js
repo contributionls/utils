@@ -7,20 +7,26 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  Typography,
+  Link,
+  Grid,
   InputAdornment,
   IconButton,
   CircularProgress,
-  Divider
+  Divider,
+  Snackbar,
+  Container
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import { Add as AddIcon, Delete as DeleteIcon } from "@material-ui/icons";
-import { FileFind } from "mdi-material-ui";
-
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { FileFind, ContentCopy } from "mdi-material-ui";
 import Editor from "react-simple-code-editor";
 import { highlight, languages } from "prismjs/components/prism-core";
-import { getExtname, api } from "./utils";
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-javascript";
+import { getExtname, api, isValidUrl } from "./utils";
+import SnackBarContentWrapper from "./components/SnackBarContent";
+import "prismjs/components/prism-yaml";
+import "prismjs/components/prism-json";
 import "./Home.css";
 const HOST = process.env.REACT_APP_API_HOST
   ? process.env.REACT_APP_API_HOST
@@ -45,6 +51,9 @@ const useStyles = makeStyles(theme => ({
     margin: theme.spacing(1),
     minWidth: 120
   },
+  buttonSplit: {
+    flex: 1
+  },
   legend: {
     color: "rgba(0, 0, 0, 0.38)"
   },
@@ -54,17 +63,36 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "center"
   },
   divider: {
-    margin: theme.spacing(4)
+    marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(4)
+  },
+  close: {
+    padding: theme.spacing(0.5)
+  },
+  error: {
+    backgroundColor: "red"
+  },
+  heroContent: {
+    padding: theme.spacing(8, 0, 6)
+  },
+  heroButtons: {
+    marginTop: theme.spacing(4)
+  },
+  space: {
+    marginLeft: theme.spacing(1)
   }
 }));
 
 export default function Home() {
   const classes = useStyles();
   const [isLoading, setLoading] = useState(false);
-  const [urls, setUrls] = useState([
-    "https://gist.githubusercontent.com/contributionls/6ab023e9d4c1e17fc3dc13220812ca6f/raw/a.yaml",
-    "https://gist.githubusercontent.com/contributionls/6ab023e9d4c1e17fc3dc13220812ca6f/raw/b.yaml"
-  ]);
+  const [urls, setUrls] = useState(["", ""]);
+  const getUrlsError = allUrls => {
+    return allUrls.map(url => {
+      return !isValidUrl(url);
+    });
+  };
+  const [urlsErrors, setUrlsError] = useState(getUrlsError(urls));
   const getAutoFileType = allUrls => {
     let theDefaultFileType = "";
     for (const iterator of allUrls) {
@@ -89,12 +117,40 @@ export default function Home() {
   const [fileType, setFileType] = useState(defaultFileType);
   const [mergedUrl, setMergedUrl] = useState(getMergedUrl(urls, fileType));
   const [mergedPreview, setMergedPreview] = useState("");
+  const [open, setOpen] = useState(false);
+  const [openError, setOpenError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("test");
+  function handleClickCopy() {
+    setOpen(true);
+  }
 
+  function handleClose(event, reason) {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  }
+
+  function handleCloseError(event, reason) {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenError(false);
+  }
+  const handleChangeMergedUrl = e => {
+    setMergedUrl(e.target.value);
+  };
   const handleChangeUrl = (index, theFileType, e) => {
     const newUrls = urls.map((url, index2) => {
-      return index === index2 ? e.target.value : url;
+      return index === index2 ? e.target.value.trim() : url;
     });
     setUrls(newUrls);
+    const newUrlErrors = getUrlsError(newUrls);
+    const isHasError = newUrlErrors.filter(item => item).length > 0;
+    setUrlsError(getUrlsError(newUrls));
+    if (isHasError) {
+      return;
+    }
     const autoFileType = getAutoFileType(newUrls);
     if (autoFileType && autoFileType !== fileType) {
       setFileType(autoFileType);
@@ -105,13 +161,13 @@ export default function Home() {
     setLoading(true);
     const finalUrl = getMergedUrl(urls, fileType);
     try {
-      const results = await api(finalUrl, {
-        responseType: "text"
-      });
+      const results = await api(finalUrl);
       setLoading(false);
-      setMergedPreview(results.data);
+      setMergedPreview(results);
     } catch (error) {
       setLoading(false);
+      setOpenError(true);
+      setErrorMessage(error.message);
       throw error;
     }
   };
@@ -128,8 +184,80 @@ export default function Home() {
   const handleSetFileType = e => {
     setFileType(e.target.value);
   };
+  let firstInputRef = null;
+
+  const handleClickGetStarted = () => {
+    if (firstInputRef) {
+      firstInputRef.focus();
+    }
+  };
+  const handleClickRandom = () => {
+    const newUrls = [
+      "https://gist.githubusercontent.com/contributionls/6ab023e9d4c1e17fc3dc13220812ca6f/raw/a.yaml",
+      "https://gist.githubusercontent.com/contributionls/6ab023e9d4c1e17fc3dc13220812ca6f/raw/b.yaml"
+    ];
+    setUrls(newUrls);
+    const autoFileType = getAutoFileType(newUrls);
+    setFileType(autoFileType);
+    setMergedUrl(getMergedUrl(newUrls, autoFileType));
+  };
   return (
     <div>
+      {/* Hero unit */}
+      <div className={classes.heroContent}>
+        <Container maxWidth="sm">
+          <Typography
+            component="h1"
+            variant="h2"
+            align="center"
+            color="textPrimary"
+            gutterBottom
+          >
+            Merge config online
+          </Typography>
+          <Typography
+            variant="h5"
+            align="center"
+            color="textSecondary"
+            paragraph
+          >
+            Sometimes we need to extend common configuration,But public
+            configuration does not provide a method of extending or merge. So we
+            made the util for that.The merge stragety comes from
+            <Link
+              className={classes.space}
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://github.com/TehShrike/deepmerge"
+            >
+              deepmerge
+            </Link>
+            . Now,we support yaml/yml/json
+          </Typography>
+          <div className={classes.heroButtons}>
+            <Grid container spacing={2} justify="center">
+              <Grid item>
+                <Button
+                  onClick={handleClickGetStarted}
+                  variant="contained"
+                  color="primary"
+                >
+                  Get started
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  onClick={handleClickRandom}
+                  variant="outlined"
+                  color="primary"
+                >
+                  gen random
+                </Button>
+              </Grid>
+            </Grid>
+          </div>
+        </Container>
+      </div>
       <FormGroup>
         {urls.map((url, index) => {
           return (
@@ -137,6 +265,11 @@ export default function Home() {
               key={`key_${index}`}
               id={`url${index + 1}`}
               required
+              inputRef={ref => {
+                if (index === 0) {
+                  firstInputRef = ref;
+                }
+              }}
               label={`Url${index + 1}`}
               type="url"
               placeholder="Please input your config url here"
@@ -144,6 +277,8 @@ export default function Home() {
               value={url}
               variant="outlined"
               margin="normal"
+              error={urlsErrors[index]}
+              helperText={urlsErrors[index] ? "URL is invalid!" : ""}
               InputProps={{
                 endAdornment:
                   index > 1 ? (
@@ -181,55 +316,109 @@ export default function Home() {
             variant="contained"
             color="default"
             onClick={handleAddUrl}
-            size="large"
+            size="small"
             className={classes.button}
           >
-            <AddIcon className={classes.buttonIcon} />
+            <AddIcon fontSize="small" className={classes.buttonIcon} />
             Add another url
           </Button>
         </FormGroup>
-        <Divider variant="middle" className={classes.divider} />
+        <Divider className={classes.divider} />
         <TextField
           multiline
           id="url-result"
           required
           label="Merged Url"
           type="url"
+          onChange={handleChangeMergedUrl}
           value={mergedUrl}
           variant="outlined"
           margin="normal"
         />
-        <Button
-          onClick={handleGenerate.bind(null, urls, fileType)}
-          size="large"
-          variant="contained"
-          color="primary"
-          disabled={isLoading}
-          className={classes.button}
-        >
-          <FileFind className={classes.buttonIcon} />
-          Preview
-        </Button>
-        {isLoading ? (
-          <div className={classes.loading}>
-            <CircularProgress color="inherit" />
-          </div>
-        ) : null}
+        <FormGroup row>
+          <CopyToClipboard text={mergedUrl} onCopy={handleClickCopy}>
+            <Button
+              variant="contained"
+              color="default"
+              className={`${classes.button} ${classes.buttonSplit}`}
+            >
+              <ContentCopy fontSize="small" className={classes.buttonIcon} />
+              copy
+            </Button>
+          </CopyToClipboard>
+
+          <Button
+            onClick={handleGenerate.bind(null, urls, fileType)}
+            variant="contained"
+            color="primary"
+            disabled={isLoading}
+            className={`${classes.button} ${classes.buttonSplit}`}
+          >
+            {isLoading ? (
+              <CircularProgress
+                size={20}
+                color="inherit"
+                className={classes.buttonIcon}
+              />
+            ) : null}
+            <FileFind fontSize="small" className={classes.buttonIcon} />
+            Preview
+          </Button>
+        </FormGroup>
+
         <fieldset className="fieldset">
           <legend className={classes.legend}>Preview</legend>
-          <Editor
-            value={mergedPreview}
-            onValueChange={code => setMergedPreview(code)}
-            highlight={code => highlight(code, languages.js)}
-            padding={10}
-            className="container__editor"
-            style={{
-              fontFamily: '"Fira code", "Fira Mono", monospace',
-              fontSize: 12
-            }}
-          />
+          <div className="container__area">
+            <Editor
+              value={mergedPreview}
+              onValueChange={code => setMergedPreview(code)}
+              highlight={code => {
+                const highlightCode =
+                  fileType && code
+                    ? highlight(code, languages[fileType])
+                    : code;
+                return highlightCode;
+              }}
+              padding={4}
+              className="container__editor"
+              style={{
+                fontFamily: '"Fira code", "Fira Mono", monospace',
+                fontSize: 12
+              }}
+            />
+          </div>
         </fieldset>
       </FormGroup>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left"
+        }}
+        open={open}
+        autoHideDuration={1500}
+        onClose={handleClose}
+      >
+        <SnackBarContentWrapper
+          onClose={handleClose}
+          variant="success"
+          message="The url has be copied!"
+        />
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left"
+        }}
+        open={openError}
+        autoHideDuration={1500}
+        onClose={handleCloseError}
+      >
+        <SnackBarContentWrapper
+          onClose={handleCloseError}
+          variant="error"
+          message={errorMessage}
+        />
+      </Snackbar>
     </div>
   );
 }

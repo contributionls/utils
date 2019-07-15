@@ -14,7 +14,8 @@ import { GithubCircle } from "mdi-material-ui";
 import Home from "./Home";
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -45,7 +46,7 @@ export default function ButtonAppBar() {
               <MergeType />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              Merge
+              Merge config online
             </Typography>
             <Link
               href="https://github.com/contributionls/utils"
