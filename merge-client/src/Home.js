@@ -105,12 +105,14 @@ export default function Home() {
     return theDefaultFileType;
   };
   const getMergedUrl = (allUrls, fileType) => {
-    const query = new URLSearchParams({
-      type: fileType,
-      urls: allUrls.filter(url => {
-        return url;
-      })
+    const searchObj = {};
+    if (fileType) {
+      searchObj.type = fileType;
+    }
+    searchObj.urls = allUrls.filter(url => {
+      return url;
     });
+    const query = new URLSearchParams(searchObj);
     return `${HOST}/merge?${query.toString()}`;
   };
   const defaultFileType = getAutoFileType(urls);
