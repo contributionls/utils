@@ -35,6 +35,9 @@ const HOST = process.env.REACT_APP_API_HOST
 const allowTypes = [".yaml", ".yml", ".json"];
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    paddingBottom: 30
+  },
   button: {
     margin: theme.spacing(1)
   },
@@ -204,10 +207,10 @@ export default function Home() {
     setMergedUrl(getMergedUrl(newUrls, autoFileType));
   };
   return (
-    <div>
+    <div className={classes.root}>
       {/* Hero unit */}
       <div className={classes.heroContent}>
-        <Container maxWidth="sm">
+        <Container maxWidth="md">
           <Typography
             component="h1"
             variant="h2"
@@ -253,8 +256,22 @@ export default function Home() {
                   variant="outlined"
                   color="primary"
                 >
-                  gen random
+                  Gen random
                 </Button>
+              </Grid>
+              <Grid item>
+                <Link color="inherit" href="https://utils.men/merge.html">
+                  <Button variant="outlined" color="primary">
+                    Docs
+                  </Button>
+                </Link>
+              </Grid>
+              <Grid item>
+                <Link color="inherit" href="https://utils.men">
+                  <Button variant="outlined" color="primary">
+                    More Tools
+                  </Button>
+                </Link>
               </Grid>
             </Grid>
           </div>

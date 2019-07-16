@@ -1,5 +1,5 @@
 module.exports = {
-  title: "Hello VuePress",
-  description: "Just playing around",
+  title: "Utils.men",
+  description: "offer some useful tools",
   dest: "build"
 };
