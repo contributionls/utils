@@ -35,3 +35,5 @@ server:
 	docker-compose exec server /bin/sh
 home:
 	docker-compose exec home-client /bin/sh
+logs:
+	docker-compose logs -f

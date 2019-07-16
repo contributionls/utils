@@ -19,3 +19,7 @@ services:
     environment:
       VIRTUAL_HOST: utils.men
       LETSENCRYPT_HOST: utils.men
+networks:
+  default:
+    external:
+      name: nginx-proxy
