@@ -1,4 +1,4 @@
-.PHONY: build start test deploy stop-deploy build-start local-deploy stop-local-deploy merge server home
+.PHONY: start build stop test deploy merge server home logs
 
 SERVER_NAME   := contributionls/utils-server
 MERGE_CLIENT_NAME   := contributionls/utils-merge-client
@@ -11,24 +11,18 @@ MERGE_CLIENT_IMG    := ${MERGE_CLIENT_NAME}:${TAG}
 MERGE_CLIENT_LATEST := ${MERGE_CLIENT_NAME}:latest
 HOME_CLIENT_IMG    := ${HOME_CLIENT_NAME}:${TAG}
 HOME_CLIENT_LATEST := ${HOME_CLIENT_NAME}:latest
-build:
-	cd server && docker build -t ${SERVER_LATEST} . && cd ../merge-client && docker build -t ${MERGE_CLIENT_LATEST} . && cd ../home-client && docker build -t ${HOME_CLIENT_LATEST} .
 start:
-	docker-compose up
-build-start:
-	docker-compose up --build
+	docker-compose -f ./docker-compose.development.yml up
+start-with-build:
+	docker-compose -f ./docker-compose.development.yml up --build
+build:
+	docker build -t ${SERVER_LATEST} server && docker build -t ${MERGE_CLIENT_LATEST} merge-client && docker build -t ${HOME_CLIENT_LATEST} home-client
 stop:
 	docker-compose stop
 test:
 	docker-compose -f ./docker-compose.test.yml up --build
-local-deploy:
-	docker-compose -f ./docker-compose.local.deploy.yml up -d
-stop-local-deploy:
-	docker-compose -f ./docker-compose.local.deploy.yml stop
 deploy:
-	docker-compose -f ./docker-compose.deploy.yml up -d
-stop-deploy:
-	docker-compose -f ./docker-compose.deploy.yml stop
+	docker-compose up -d
 merge:
 	docker-compose exec merge-client /bin/sh
 server:

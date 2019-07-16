@@ -44,9 +44,9 @@ make deploy
 stop deploy:
 
 ```bash
-make stop-deploy
+make stop
 ```
 
-The server url is <http://localhost:10001>
-The merge client url is <http://localhost:10002>
-The home client url is <http://localhost:10003>
+The server url is <https://api.utils.men>
+The merge client url is <https://merge.utils.men>
+The home client url is <https://utils.men>

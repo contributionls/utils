@@ -1,0 +1,40 @@
+version: "3"
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: DEV.Dockerfile
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./server:/app:cached
+      - server-node-modules:/app/node_modules/
+    command: ["sh","-c","yarn start"]
+  merge-client:
+    build:
+      context: ./merge-client
+      dockerfile: DEV.Dockerfile
+    environment:
+      REACT_APP_API_HOST: 'http://localhost:4000'
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./merge-client:/app:cached
+      - merge-client-node-modules:/app/node_modules/
+    command: ["sh","-c","yarn start"]
+  home-client:
+    build:
+      context: ./home-client
+      dockerfile: DEV.Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./home-client:/app:cached
+      - ./docs:/docs:cached
+      - home-client-node-modules:/app/node_modules/
+    command: ["sh","-c","yarn start"]
+
+volumes:
+  server-node-modules:
+  merge-client-node-modules:
+  home-client-node-modules:
