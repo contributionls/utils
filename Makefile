@@ -1,4 +1,4 @@
-.PHONY: build start test deploy stop-deploy build-start
+.PHONY: build start test deploy stop-deploy build-start local-deploy stop-local-deploy merge server home
 
 SERVER_NAME   := contributionls/utils-server
 MERGE_CLIENT_NAME   := contributionls/utils-merge-client
@@ -25,6 +25,10 @@ local-deploy:
 	docker-compose -f ./docker-compose.local.deploy.yml up -d
 stop-local-deploy:
 	docker-compose -f ./docker-compose.local.deploy.yml stop
+deploy:
+	docker-compose -f ./docker-compose.deploy.yml up -d
+stop-deploy:
+	docker-compose -f ./docker-compose.deploy.yml stop
 merge:
 	docker-compose exec merge-client /bin/sh
 server:
