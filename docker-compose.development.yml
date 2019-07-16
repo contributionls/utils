@@ -30,7 +30,7 @@ services:
       - "8080:8080"
     volumes:
       - ./home-client:/app:cached
-      - ./docs:/docs:cached
+      - ./home-client/docs:/docs:cached
       - home-client-node-modules:/app/node_modules/
     command: ["sh","-c","yarn start"]
 

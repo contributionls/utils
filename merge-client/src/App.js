@@ -17,6 +17,9 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     backgroundColor: theme.palette.background.paper
   },
+  grow: {
+    flexGrow: 1
+  },
   menuButton: {
     marginRight: theme.spacing(2)
   },
@@ -37,17 +40,22 @@ export default function ButtonAppBar() {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="Menu"
-            >
-              <MergeType />
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              Merge config online
-            </Typography>
+            <Link color="inherit" href="/">
+              <IconButton
+                edge="start"
+                className={classes.menuButton}
+                color="inherit"
+                aria-label="Menu"
+              >
+                <MergeType />
+              </IconButton>
+            </Link>
+            <Link color="inherit" href="/">
+              <Typography variant="h6" className={classes.title}>
+                Merge config online
+              </Typography>
+            </Link>
+            <div className={classes.grow} />
             <Link
               href="https://github.com/contributionls/utils"
               target="_blank"
