@@ -1,5 +1,5 @@
 # Stage 1
-FROM node:10.15.3-alpine as docs-build
+FROM node:lts-alpine as docs-build
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
