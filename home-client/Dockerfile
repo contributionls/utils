@@ -4,7 +4,7 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY yarn.lock ./
-RUN yarn
+RUN yarn install -network-timeout 1000000
 COPY ./ ./
 RUN yarn build
 
@@ -12,5 +12,6 @@ RUN yarn build
 FROM nginx:alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=docs-build /app/build /usr/share/nginx/html
+RUN rm -rf /app
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
