@@ -1,6 +1,7 @@
 # Stage 1
 FROM node:10.15.3-alpine as react-build
 WORKDIR /app
+ENV REACT_APP_API_HOST https://api.utils.men
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY yarn.lock ./
