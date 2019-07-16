@@ -22,7 +22,7 @@ stop:
 test:
 	docker-compose -f ./docker-compose.test.yml up --build
 deploy:
-	docker-compose up -d
+	docker-compose pull && docker-compose up -d
 merge:
 	docker-compose exec merge-client /bin/sh
 server:
