@@ -5,7 +5,7 @@ ENV REACT_APP_API_HOST https://api.utils.men
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY yarn.lock ./
-RUN yarn install -network-timeout 1000000
+RUN yarn install --network-timeout 1000000
 COPY ./ ./
 RUN yarn build
 
