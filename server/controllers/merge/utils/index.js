@@ -3,7 +3,9 @@ const mergeJson = require("./merge");
 const debug = require("debug")("merge");
 const axios = require("axios");
 const yamlUtil = require("../../../utils/yaml");
-const allowTypes = [".yaml", ".yml", ".json"];
+const iniUtil = require("../../../utils/ini");
+
+const allowTypes = [".yaml", ".yml", ".json", ".ini"];
 //options
 // type, default read from suffix,or yaml
 // combine stragety refer<https://www.npmjs.com/package/deepmerge> default params.
@@ -27,6 +29,8 @@ async function merge(urls, options) {
     // handle  options
     if (options.type === "yml") {
       options.type = "yaml";
+    } else if (options.type === "conf") {
+      options.type = "ini";
     }
     debug("merge options: %o", options);
     const jsonArr = [];
@@ -46,6 +50,9 @@ async function merge(urls, options) {
 
         if (options.type === "yaml") {
           jsonArr.push(yamlUtil.yamlToJson(item));
+        } else if (options.type === "ini") {
+          console.log("item", item);
+          jsonArr.push(iniUtil.iniToJson(item));
         } else if (options.type === "json") {
           jsonArr.push(item);
         }
@@ -58,9 +65,13 @@ async function merge(urls, options) {
       if (options.type === "yaml") {
         finalResult.body = yamlUtil.jsonToYaml(mergeResult);
         finalResult.type = "text/vnd.yaml";
+      } else if (options.type === "ini") {
+        finalResult.body = iniUtil.jsonToIni(mergeResult);
       } else if (options.type === "json") {
         finalResult.body = JSON.stringify(mergeResult, null, 2);
         finalResult.type = "json";
+      } else {
+        finalResult.type = "text/plain";
       }
       return finalResult;
     } catch (error) {

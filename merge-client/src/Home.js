@@ -27,12 +27,13 @@ import { getExtname, api, isValidUrl } from "./utils";
 import SnackBarContentWrapper from "./components/SnackBarContent";
 import "prismjs/components/prism-yaml";
 import "prismjs/components/prism-json";
+import "prismjs/components/prism-ini.js";
 import "./Home.css";
 const HOST = process.env.REACT_APP_API_HOST
   ? process.env.REACT_APP_API_HOST
   : "";
 
-const allowTypes = [".yaml", ".yml", ".json"];
+const allowTypes = [".yaml", ".yml", ".json", ".ini"];
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -104,6 +105,11 @@ export default function Home() {
         theDefaultFileType = ext.substring(1);
         break;
       }
+    }
+    if (theDefaultFileType === "yml") {
+      theDefaultFileType = "yaml";
+    } else if (theDefaultFileType === "conf") {
+      theDefaultFileType = "ini";
     }
     return theDefaultFileType;
   };
@@ -237,7 +243,7 @@ export default function Home() {
             >
               deepmerge
             </Link>
-            . Now,we support yaml/yml/json
+            . Now,we support yaml/yml/json/ini
           </Typography>
           <div className={classes.heroButtons}>
             <Grid container spacing={2} justify="center">
@@ -328,6 +334,7 @@ export default function Home() {
               }}
             >
               <MenuItem value="yaml">yaml</MenuItem>
+              <MenuItem value="ini">ini</MenuItem>
               <MenuItem value="json">json</MenuItem>
             </Select>
           </FormControl>
