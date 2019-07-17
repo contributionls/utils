@@ -104,7 +104,7 @@ export default function Home() {
 
     if (theDefaultFileType === "yml") {
       theDefaultFileType = "yaml";
-    } else if (theDefaultFileType === "conf") {
+    } else if (theDefaultFileType === "conf" || theDefaultFileType === "txt") {
       theDefaultFileType = "ini";
     }
     return theDefaultFileType;
@@ -150,7 +150,7 @@ export default function Home() {
     }
     setOpenError(false);
   }
-  const handleChangeconvertUrl = e => {
+  const handleChangeConvertUrl = e => {
     setConvertUrl(e.target.value);
   };
   const handleChangeUrl = (theFileType, theDestFileType, e) => {
@@ -183,11 +183,15 @@ export default function Home() {
     }
   };
 
-  const handleSetFileType = e => {
+  const handleSetFileType = (newUrl, theDestFileType, e) => {
     setFileType(e.target.value);
+    // url
+    setConvertUrl(getConvertUrl(newUrl, e.target.value, theDestFileType));
   };
-  const handleSetDestFileType = e => {
+  const handleSetDestFileType = (newUrl, fileType, e) => {
     setDestFileType(e.target.value);
+    // url
+    setConvertUrl(getConvertUrl(newUrl, fileType, e.target.value));
   };
   let firstInputRef = null;
 
@@ -289,7 +293,7 @@ export default function Home() {
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="source-file-type">Source Type</InputLabel>
             <Select
-              onChange={handleSetFileType}
+              onChange={handleSetFileType.bind(null, url, destFileType)}
               value={fileType}
               inputProps={{
                 name: "type",
@@ -304,7 +308,7 @@ export default function Home() {
           <FormControl required className={classes.formControl}>
             <InputLabel htmlFor="dest-file-type">Dest Type</InputLabel>
             <Select
-              onChange={handleSetDestFileType}
+              onChange={handleSetDestFileType.bind(null, url, fileType)}
               value={destFileType}
               inputProps={{
                 name: "type",
@@ -324,7 +328,7 @@ export default function Home() {
           required
           label="Convert Url"
           type="url"
-          onChange={handleChangeconvertUrl}
+          onChange={handleChangeConvertUrl}
           value={convertUrl}
           variant="outlined"
           margin="normal"

@@ -34,7 +34,7 @@ async function convert(url, options) {
     // handle  options
     if (options.source === "yml") {
       options.source = "yaml";
-    } else if (options.source === "conf") {
+    } else if (options.source === "conf" || options.source === "txt") {
       options.source = "ini";
     }
     debug("convert options: %o", options);

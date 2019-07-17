@@ -110,7 +110,7 @@ export default function Home() {
     }
     if (theDefaultFileType === "yml") {
       theDefaultFileType = "yaml";
-    } else if (theDefaultFileType === "conf") {
+    } else if (theDefaultFileType === "conf" || theDefaultFileType === "txt") {
       theDefaultFileType = "ini";
     }
     return theDefaultFileType;
@@ -194,8 +194,9 @@ export default function Home() {
       })
     );
   };
-  const handleSetFileType = e => {
+  const handleSetFileType = (newUrls, e) => {
     setFileType(e.target.value);
+    setMergedUrl(getMergedUrl(newUrls, e.target.value));
   };
   let firstInputRef = null;
 
@@ -328,7 +329,7 @@ export default function Home() {
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="age-simple">File Type</InputLabel>
             <Select
-              onChange={handleSetFileType}
+              onChange={handleSetFileType.bind(null, urls)}
               value={fileType}
               inputProps={{
                 name: "type",

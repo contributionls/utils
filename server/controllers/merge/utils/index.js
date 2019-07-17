@@ -29,7 +29,7 @@ async function merge(urls, options) {
     // handle  options
     if (options.type === "yml") {
       options.type = "yaml";
-    } else if (options.type === "conf") {
+    } else if (options.type === "conf" || options.type === "txt") {
       options.type = "ini";
     }
     debug("merge options: %o", options);
