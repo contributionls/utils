@@ -7,5 +7,5 @@ COPY package.json ./
 COPY yarn.lock ./
 RUN yarn
 COPY ./ ./
-EXPOSE 3000
-CMD ["/bin/sh","-c","yarn start"]
+EXPOSE 3001
+CMD ["/bin/sh","-c","PORT=3001 yarn start"]

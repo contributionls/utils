@@ -51,7 +51,6 @@ async function merge(urls, options) {
         if (options.type === "yaml") {
           jsonArr.push(yamlUtil.yamlToJson(item));
         } else if (options.type === "ini") {
-          console.log("item", item);
           jsonArr.push(iniUtil.iniToJson(item));
         } else if (options.type === "json") {
           jsonArr.push(item);
@@ -77,6 +76,10 @@ async function merge(urls, options) {
     } catch (error) {
       throw error;
     }
+  } else {
+    const error = new Error("invalid urls params");
+    error.expose = true;
+    throw error;
   }
 }
 
