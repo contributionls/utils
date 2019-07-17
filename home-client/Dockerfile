@@ -4,7 +4,7 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY yarn.lock ./
-RUN yarn install --network-timeout 1000000
+RUN yarn install --network-timeout 60000 --network-concurrency 2
 COPY ./ ./
 RUN yarn build
 

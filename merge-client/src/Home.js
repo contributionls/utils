@@ -32,7 +32,9 @@ import "./Home.css";
 const HOST = process.env.REACT_APP_API_HOST
   ? process.env.REACT_APP_API_HOST
   : "";
-
+const MAIN_HOST = process.env.REACT_APP_MAIN_HOST
+  ? process.env.REACT_APP_MAIN_HOST
+  : "";
 const allowTypes = [".yaml", ".yml", ".json", ".ini"];
 
 const useStyles = makeStyles(theme => ({
@@ -262,18 +264,18 @@ export default function Home() {
                   variant="outlined"
                   color="primary"
                 >
-                  Gen random
+                  Sample
                 </Button>
               </Grid>
               <Grid item>
-                <Link color="inherit" href="https://utils.men/merge.html">
+                <Link color="inherit" href={`${MAIN_HOST}/merge.html`}>
                   <Button variant="outlined" color="primary">
                     Docs
                   </Button>
                 </Link>
               </Grid>
               <Grid item>
-                <Link color="inherit" href="https://utils.men">
+                <Link color="inherit" href={MAIN_HOST}>
                   <Button variant="outlined" color="primary">
                     More Tools
                   </Button>

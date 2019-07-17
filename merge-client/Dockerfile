@@ -2,10 +2,11 @@
 FROM node:lts-alpine as react-build
 WORKDIR /app
 ENV REACT_APP_API_HOST https://api.utils.men
+ENV REACT_APP_MAIN_HOST https://utils.men
 ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 COPY yarn.lock ./
-RUN yarn install --network-timeout 1000000
+RUN yarn install --network-timeout 60000 --network-concurrency 2
 COPY ./ ./
 RUN yarn build
 
