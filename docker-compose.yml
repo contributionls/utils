@@ -13,6 +13,13 @@ services:
       VIRTUAL_HOST: merge.utils.men
       LETSENCRYPT_HOST: merge.utils.men
     restart: always
+  convert-client:
+    image: contributionls/utils-convert-client
+    environment:
+      REACT_APP_API_HOST: "https://api.utils.men"
+      VIRTUAL_HOST: convert.utils.men
+      LETSENCRYPT_HOST: convert.utils.men
+    restart: always
   home-client:
     image: contributionls/utils-home-client
     restart: always
