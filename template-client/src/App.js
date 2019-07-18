@@ -52,7 +52,7 @@ export default function ButtonAppBar() {
             </Link>
             <Link color="inherit" href="/">
               <Typography variant="h6" className={classes.title}>
-                Jsonpath url online
+                Template url online
               </Typography>
             </Link>
             <div className={classes.grow} />
