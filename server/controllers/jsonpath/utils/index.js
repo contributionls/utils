@@ -52,13 +52,11 @@ async function jsonpath(url, options) {
       } else if (options.source === "json") {
         jsonResult = item;
       }
-      console.log("jsonResult, jsonpath", jsonResult, jsonpath);
       // jsonpath
       const jsonpathResult = jsonpathUtil.query(jsonResult, jsonpath);
       let finalResult = {
         headers: {}
       };
-      console.log("jsonpathResult", jsonpathResult);
       if (jsonpathResult && jsonpathResult.length > 0) {
         finalResult.type = "text/plain";
         finalResult.body = jsonpathResult[0];
@@ -78,16 +76,3 @@ async function jsonpath(url, options) {
 }
 
 exports.jsonpath = jsonpath;
-
-// jsonpath(
-//   "https://gist.githubusercontent.com/contributionls/6ab023e9d4c1e17fc3dc13220812ca6f/raw/a.json",
-//   {
-//     jsonpath: "$.foo.bar"
-//   }
-// )
-//   .then(data => {
-//     console.log("data", data);
-//   })
-//   .catch(e => {
-//     console.log("e", e);
-//   });
