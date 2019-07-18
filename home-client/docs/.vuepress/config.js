@@ -8,6 +8,6 @@ module.exports = {
     docsDir: "home-client/docs",
     editLinks: true,
     nav: [{ text: "Home", link: "/" }],
-    sidebar: ["/", "/merge", "/convert"]
+    sidebar: ["/", "/merge", "/convert", "/jsonpath"]
   }
 };

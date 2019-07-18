@@ -10,24 +10,17 @@ import {
   Typography,
   Link,
   Grid,
-  InputAdornment,
-  IconButton,
   CircularProgress,
   Divider,
   Snackbar,
   Container
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Add as AddIcon, Delete as DeleteIcon } from "@material-ui/icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FileFind, ContentCopy } from "mdi-material-ui";
 import Editor from "react-simple-code-editor";
-import { highlight, languages } from "prismjs/components/prism-core";
 import { getExtname, api, isValidUrl } from "./utils";
 import SnackBarContentWrapper from "./components/SnackBarContent";
-import "prismjs/components/prism-yaml";
-import "prismjs/components/prism-json";
-import "prismjs/components/prism-ini.js";
 import "./Home.css";
 const HOST = process.env.REACT_APP_API_HOST
   ? process.env.REACT_APP_API_HOST
@@ -35,22 +28,20 @@ const HOST = process.env.REACT_APP_API_HOST
 const MAIN_HOST = process.env.REACT_APP_MAIN_HOST
   ? process.env.REACT_APP_MAIN_HOST
   : "";
-const allowTypes = [".yaml", ".yml", ".json", ".ini"];
+const allowTypes = [".yaml", ".yml", ".json", ".ini", ".txt", ".conf"];
 
 const useStyles = makeStyles(theme => ({
   root: {
     paddingBottom: 30
   },
+  buttonGrow: {
+    flexGrow: 1
+  },
   button: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1)
   },
-  buttonBox: {
-    justifyContent: "space-between"
-  },
-  buttonGrow: {
-    flexGrow: 1
-  },
+  buttonBox: {},
   input: {
     display: "none"
   },
@@ -58,7 +49,7 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1)
   },
   formControl: {
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(4),
     minWidth: 120
   },
   buttonSplit: {
@@ -96,22 +87,19 @@ const useStyles = makeStyles(theme => ({
 export default function Home() {
   const classes = useStyles();
   const [isLoading, setLoading] = useState(false);
-  const [urls, setUrls] = useState(["", ""]);
-  const getUrlsError = allUrls => {
-    return allUrls.map(url => {
-      return !isValidUrl(url);
-    });
+  const [url, setUrl] = useState("");
+  const [jsonpath, setJsonpath] = useState("");
+  const getUrlError = url => {
+    return !isValidUrl(url);
   };
-  const [urlsErrors, setUrlsError] = useState(getUrlsError(urls));
-  const getAutoFileType = allUrls => {
+  const [urlError, setUrlError] = useState(getUrlError(url));
+  const getAutoFileType = url => {
     let theDefaultFileType = "";
-    for (const iterator of allUrls) {
-      const ext = getExtname(iterator);
-      if (ext && allowTypes.includes(ext)) {
-        theDefaultFileType = ext.substring(1);
-        break;
-      }
+    const ext = getExtname(url);
+    if (ext && allowTypes.includes(ext)) {
+      theDefaultFileType = ext.substring(1);
     }
+
     if (theDefaultFileType === "yml") {
       theDefaultFileType = "yaml";
     } else if (theDefaultFileType === "conf" || theDefaultFileType === "txt") {
@@ -119,21 +107,24 @@ export default function Home() {
     }
     return theDefaultFileType;
   };
-  const getMergedUrl = (allUrls, fileType) => {
+  const getJsonpathUrl = (url, source, jsonpath) => {
     const searchObj = {};
-    if (fileType) {
-      searchObj.source = fileType;
+    if (source) {
+      searchObj.source = source;
     }
-    searchObj.urls = allUrls.filter(url => {
-      return url;
-    });
+    if (jsonpath) {
+      searchObj.jsonpath = jsonpath;
+    }
+    searchObj.url = url;
     const query = new URLSearchParams(searchObj);
-    return `${HOST}/merge?${query.toString()}`;
+    return `${HOST}/jsonpath?${query.toString()}`;
   };
-  const defaultFileType = getAutoFileType(urls);
+  const defaultFileType = getAutoFileType(url);
   const [fileType, setFileType] = useState(defaultFileType);
-  const [mergedUrl, setMergedUrl] = useState(getMergedUrl(urls, fileType));
-  const [mergedPreview, setMergedPreview] = useState("");
+  const [jsonpathUrl, setJsonpathUrl] = useState(
+    getJsonpathUrl(url, fileType, jsonpath)
+  );
+  const [jsonpathPreview, setJsonpathPreview] = useState("");
   const [open, setOpen] = useState(false);
   const [openError, setOpenError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("test");
@@ -154,54 +145,51 @@ export default function Home() {
     }
     setOpenError(false);
   }
-  const handleChangeMergedUrl = e => {
-    setMergedUrl(e.target.value);
+  const handleChangeJsonpathUrl = e => {
+    setJsonpathUrl(e.target.value);
   };
-  const handleChangeUrl = (index, theFileType, e) => {
-    const newUrls = urls.map((url, index2) => {
-      return index === index2 ? e.target.value.trim() : url;
-    });
-    setUrls(newUrls);
-    const newUrlErrors = getUrlsError(newUrls);
-    const isHasError = newUrlErrors.filter(item => item).length > 0;
-    setUrlsError(getUrlsError(newUrls));
+  const handleChangeUrl = (theFileType, theDestFileType, e) => {
+    const newUrl = e.target.value.trim();
+    setUrl(newUrl);
+    const newUrlError = getUrlError(newUrl);
+    const isHasError = newUrlError;
+    setUrlError(getUrlError(newUrl));
     if (isHasError) {
       return;
     }
-    const autoFileType = getAutoFileType(newUrls);
+    const autoFileType = getAutoFileType(newUrl);
     if (autoFileType && autoFileType !== fileType) {
       setFileType(autoFileType);
     }
-    setMergedUrl(getMergedUrl(newUrls, theFileType));
+    setJsonpathUrl(getJsonpathUrl(newUrl, theFileType, theDestFileType));
   };
-  const handleGenerate = async (urls, fileType) => {
+  const handleChangeJsonpath = (newUrl, theFileType, e) => {
+    const theJsonpath = e.target.value.trim();
+    setJsonpath(theJsonpath);
+    setJsonpathUrl(getJsonpathUrl(newUrl, theFileType, theJsonpath));
+  };
+  const handleGenerate = async (url, fileType, destFileType) => {
     setLoading(true);
-    const finalUrl = getMergedUrl(urls, fileType);
+    const finalUrl = getJsonpathUrl(url, fileType, destFileType);
     try {
       const results = await api(finalUrl);
       setLoading(false);
-      setMergedPreview(results);
+      setJsonpathPreview(results);
     } catch (error) {
+      console.log("error", error.body);
       setLoading(false);
       setOpenError(true);
       setErrorMessage(error.message);
       throw error;
     }
   };
-  const handleAddUrl = () => {
-    setUrls(urls.concat(""));
-  };
-  const handleClickDeleteUrl = index => {
-    setUrls(
-      urls.filter((_, index2) => {
-        return index !== index2;
-      })
-    );
-  };
-  const handleSetFileType = (newUrls, e) => {
+
+  const handleSetFileType = (newUrl, theDestFileType, e) => {
     setFileType(e.target.value);
-    setMergedUrl(getMergedUrl(newUrls, e.target.value));
+    // url
+    setJsonpathUrl(getJsonpathUrl(newUrl, e.target.value, theDestFileType));
   };
+
   let firstInputRef = null;
 
   const handleClickGetStarted = () => {
@@ -210,14 +198,14 @@ export default function Home() {
     }
   };
   const handleClickRandom = () => {
-    const newUrls = [
-      "https://gist.githubusercontent.com/contributionls/6ab023e9d4c1e17fc3dc13220812ca6f/raw/a.yaml",
-      "https://gist.githubusercontent.com/contributionls/6ab023e9d4c1e17fc3dc13220812ca6f/raw/b.yaml"
-    ];
-    setUrls(newUrls);
-    const autoFileType = getAutoFileType(newUrls);
+    const newUrl =
+      "https://gist.githubusercontent.com/contributionls/6ab023e9d4c1e17fc3dc13220812ca6f/raw/a.json";
+
+    setUrl(newUrl);
+    const autoFileType = getAutoFileType(newUrl);
     setFileType(autoFileType);
-    setMergedUrl(getMergedUrl(newUrls, autoFileType));
+    setJsonpath("$.foo");
+    setJsonpathUrl(getJsonpathUrl(newUrl, autoFileType, "$.foo"));
   };
   return (
     <div className={classes.root}>
@@ -231,7 +219,7 @@ export default function Home() {
             color="textPrimary"
             gutterBottom
           >
-            Merge config online
+            jsonpath url online
           </Typography>
           <Typography
             variant="h5"
@@ -239,18 +227,8 @@ export default function Home() {
             color="textSecondary"
             paragraph
           >
-            Sometimes we need to extend common configuration,But public
-            configuration does not provide a method of extending or merge. So we
-            made the util for that.The merge stragety comes from
-            <Link
-              className={classes.space}
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://github.com/TehShrike/deepmerge"
-            >
-              deepmerge
-            </Link>
-            . Now,we support yaml/yml/json/ini
+            Sometimes we need to get a part of online configuration, So we made
+            the util for jsonpath. Now,we support yaml/yml/json/ini
           </Typography>
           <div className={classes.heroButtons}>
             <Grid container spacing={2} justify="center">
@@ -273,7 +251,7 @@ export default function Home() {
                 </Button>
               </Grid>
               <Grid item>
-                <Link color="inherit" href={`${MAIN_HOST}/merge.html`}>
+                <Link color="inherit" href={`${MAIN_HOST}/jsonpath.html`}>
                   <Button variant="outlined" color="primary">
                     Docs
                   </Button>
@@ -291,53 +269,43 @@ export default function Home() {
         </Container>
       </div>
       <FormGroup>
-        {urls.map((url, index) => {
-          return (
-            <TextField
-              key={`key_${index}`}
-              id={`url${index + 1}`}
-              required
-              inputRef={ref => {
-                if (index === 0) {
-                  firstInputRef = ref;
-                }
-              }}
-              label={`Url${index + 1}`}
-              type="url"
-              placeholder="Please input your config url here"
-              onChange={handleChangeUrl.bind(null, index, fileType)}
-              value={url}
-              variant="outlined"
-              margin="normal"
-              error={urlsErrors[index]}
-              helperText={urlsErrors[index] ? "URL is invalid!" : ""}
-              InputProps={{
-                endAdornment:
-                  index > 1 ? (
-                    <InputAdornment position="end">
-                      <IconButton
-                        edge="end"
-                        aria-label="Remove this item"
-                        onClick={handleClickDeleteUrl.bind(null, index)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ) : null
-              }}
-            />
-          );
-        })}
+        <TextField
+          id={`url`}
+          required
+          inputRef={ref => {
+            firstInputRef = ref;
+          }}
+          label={`Url`}
+          type="url"
+          placeholder="Please input your config url here"
+          onChange={handleChangeUrl.bind(null, fileType, jsonpath)}
+          value={url}
+          variant="outlined"
+          margin="normal"
+          error={urlError}
+          helperText={urlError ? "URL is invalid!" : ""}
+        />
 
+        <TextField
+          id={`jsonpath`}
+          required
+          label={`jsonpath`}
+          type="text"
+          placeholder="Please input your jsonpath here"
+          onChange={handleChangeJsonpath.bind(null, url, fileType)}
+          value={jsonpath}
+          variant="outlined"
+          margin="normal"
+        />
         <FormGroup className={classes.buttonBox} row>
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="age-simple">Source Type</InputLabel>
+            <InputLabel htmlFor="source-file-type">Source Type</InputLabel>
             <Select
-              onChange={handleSetFileType.bind(null, urls)}
+              onChange={handleSetFileType.bind(null, url, jsonpath)}
               value={fileType}
               inputProps={{
                 name: "type",
-                id: "file-type"
+                id: "source-file-type"
               }}
             >
               <MenuItem value="yaml">yaml</MenuItem>
@@ -345,31 +313,21 @@ export default function Home() {
               <MenuItem value="json">json</MenuItem>
             </Select>
           </FormControl>
-          <Button
-            variant="contained"
-            color="default"
-            onClick={handleAddUrl}
-            size="small"
-            className={classes.button}
-          >
-            <AddIcon fontSize="small" className={classes.buttonIcon} />
-            Add another url
-          </Button>
         </FormGroup>
         <Divider className={classes.divider} />
         <TextField
           multiline
           id="url-result"
           required
-          label="Merged Url"
+          label="jsonpath Url"
           type="url"
-          onChange={handleChangeMergedUrl}
-          value={mergedUrl}
+          onChange={handleChangeJsonpathUrl}
+          value={jsonpathUrl}
           variant="outlined"
           margin="normal"
         />
         <FormGroup row>
-          <CopyToClipboard text={mergedUrl} onCopy={handleClickCopy}>
+          <CopyToClipboard text={jsonpathUrl} onCopy={handleClickCopy}>
             <Button
               variant="contained"
               color="default"
@@ -381,7 +339,7 @@ export default function Home() {
           </CopyToClipboard>
           <div className={classes.buttonGrow} />
           <Button
-            onClick={handleGenerate.bind(null, urls, fileType)}
+            onClick={handleGenerate.bind(null, url, fileType, jsonpath)}
             variant="contained"
             color="primary"
             disabled={isLoading}
@@ -403,14 +361,10 @@ export default function Home() {
           <legend className={classes.legend}>Preview</legend>
           <div className="container__area">
             <Editor
-              value={mergedPreview}
-              onValueChange={code => setMergedPreview(code)}
+              value={jsonpathPreview}
+              onValueChange={code => setJsonpathPreview(code)}
               highlight={code => {
-                const highlightCode =
-                  fileType && code
-                    ? highlight(code, languages[fileType])
-                    : code;
-                return highlightCode;
+                return code;
               }}
               padding={4}
               className="container__editor"

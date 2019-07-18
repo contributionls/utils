@@ -8,9 +8,9 @@ exports.merge = async function(ctx) {
   }
   if (Array.isArray(urls)) {
     const options = {};
-    const queryType = query.type;
+    const queryType = query.source;
     if (queryType) {
-      options.type = queryType;
+      options.source = queryType;
     }
     try {
       const { body, type } = await merge(urls, options);

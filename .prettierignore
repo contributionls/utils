@@ -1,1 +1,2 @@
-server/utils/__test__/test.json
+**/__test__/*.json
+**/__test__/*.yaml

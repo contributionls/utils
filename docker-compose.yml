@@ -20,6 +20,13 @@ services:
       VIRTUAL_HOST: convert.utils.men
       LETSENCRYPT_HOST: convert.utils.men
     restart: always
+  jsonpath-client:
+    image: contributionls/utils-jsonpath-client
+    environment:
+      REACT_APP_API_HOST: "https://api.utils.men"
+      VIRTUAL_HOST: jsonpath.utils.men
+      LETSENCRYPT_HOST: jsonpath.utils.men
+    restart: always
   home-client:
     image: contributionls/utils-home-client
     restart: always

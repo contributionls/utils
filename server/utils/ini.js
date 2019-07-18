@@ -17,10 +17,3 @@ function iniToJson(source) {
 }
 exports.jsonToIni = jsonToIni;
 exports.iniToJson = iniToJson;
-
-var x = iniToJson(`
-array[]={"does":"work","too":[1,2,3]}
-
-[foo]
-bar=3`);
-console.log("x", x);

@@ -10,7 +10,9 @@ const jsonAUrl =
 const jsonBurl =
   "https://gist.githubusercontent.com/contributionls/6ab023e9d4c1e17fc3dc13220812ca6f/raw/b.json";
 test("merge json", async () => {
-  const { body } = await merge([jsonAUrl, jsonBurl]);
+  const result = await merge([jsonAUrl, jsonBurl]);
+  const body = result.body;
+
   const jsonExpect = await readFileAsync(
     path.resolve(__dirname, "./test.json"),
     "utf8"

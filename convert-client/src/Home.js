@@ -10,15 +10,12 @@ import {
   Typography,
   Link,
   Grid,
-  InputAdornment,
-  IconButton,
   CircularProgress,
   Divider,
   Snackbar,
   Container
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
-import { Add as AddIcon, Delete as DeleteIcon } from "@material-ui/icons";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FileFind, ContentCopy } from "mdi-material-ui";
 import Editor from "react-simple-code-editor";
@@ -42,7 +39,11 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: 30
   },
   button: {
-    margin: theme.spacing(1)
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
+  },
+  buttonGrow: {
+    flexGrow: 1
   },
   buttonBox: {},
   input: {
@@ -344,7 +345,7 @@ export default function Home() {
               copy
             </Button>
           </CopyToClipboard>
-
+          <div className={classes.buttonGrow} />
           <Button
             onClick={handleGenerate.bind(null, url, fileType, destFileType)}
             variant="contained"

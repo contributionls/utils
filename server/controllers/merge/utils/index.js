@@ -5,7 +5,7 @@ const axios = require("axios");
 const yamlUtil = require("../../../utils/yaml");
 const iniUtil = require("../../../utils/ini");
 
-const allowTypes = [".yaml", ".yml", ".json", ".ini"];
+const allowTypes = [".yaml", ".yml", ".json", ".ini", ".txt", ".conf"];
 //options
 // type, default read from suffix,or yaml
 // combine stragety refer<https://www.npmjs.com/package/deepmerge> default params.
@@ -22,15 +22,15 @@ async function merge(urls, options) {
     }
     options = Object.assign(
       {
-        type: fileType
+        source: fileType
       },
       options
     );
     // handle  options
-    if (options.type === "yml") {
-      options.type = "yaml";
-    } else if (options.type === "conf" || options.type === "txt") {
-      options.type = "ini";
+    if (options.source === "yml") {
+      options.source = "yaml";
+    } else if (options.source === "conf" || options.source === "txt") {
+      options.source = "ini";
     }
     debug("merge options: %o", options);
     const jsonArr = [];
@@ -47,12 +47,11 @@ async function merge(urls, options) {
       for (const iterator of responses) {
         const item = iterator.data;
         debug("response %s", item);
-
-        if (options.type === "yaml") {
+        if (options.source === "yaml") {
           jsonArr.push(yamlUtil.yamlToJson(item));
-        } else if (options.type === "ini") {
+        } else if (options.source === "ini") {
           jsonArr.push(iniUtil.iniToJson(item));
-        } else if (options.type === "json") {
+        } else if (options.source === "json") {
           jsonArr.push(item);
         }
       }
@@ -61,12 +60,12 @@ async function merge(urls, options) {
         headers: {}
       };
       const mergeResult = mergeJson(jsonArr);
-      if (options.type === "yaml") {
+      if (options.source === "yaml") {
         finalResult.body = yamlUtil.jsonToYaml(mergeResult);
         finalResult.type = "text/vnd.yaml";
-      } else if (options.type === "ini") {
+      } else if (options.source === "ini") {
         finalResult.body = iniUtil.jsonToIni(mergeResult);
-      } else if (options.type === "json") {
+      } else if (options.source === "json") {
         finalResult.body = JSON.stringify(mergeResult, null, 2);
         finalResult.type = "json";
       } else {
