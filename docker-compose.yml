@@ -27,6 +27,13 @@ services:
       VIRTUAL_HOST: jsonpath.utils.men
       LETSENCRYPT_HOST: jsonpath.utils.men
     restart: always
+  template-client:
+    image: contributionls/utils-template-client
+    environment:
+      REACT_APP_API_HOST: "https://api.utils.men"
+      VIRTUAL_HOST: template.utils.men
+      LETSENCRYPT_HOST: template.utils.men
+    restart: always
   home-client:
     image: contributionls/utils-home-client
     restart: always

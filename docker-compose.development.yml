@@ -43,6 +43,17 @@ services:
     volumes:
       - ./jsonpath-client:/app:cached
       - jsonpath-client-node-modules:/app/node_modules/
+  template-client:
+    build:
+      context: ./template-client
+      dockerfile: DEV.Dockerfile
+    environment:
+      REACT_APP_API_HOST: 'http://localhost:4000'
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./template-client:/app:cached
+      - template-client-node-modules:/app/node_modules/
   home-client:
     build:
       context: ./home-client
@@ -61,3 +72,4 @@ volumes:
   home-client-node-modules:
   convert-client-node-modules:
   jsonpath-client-node-modules:
+  template-client-node-modules:
