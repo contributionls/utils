@@ -169,9 +169,8 @@ export default function Home() {
     }
     setConvertUrl(getConvertUrl(newUrl, theFileType, theDestFileType));
   };
-  const handleGenerate = async (url, fileType, destFileType) => {
+  const handleGenerate = async finalUrl => {
     setLoading(true);
-    const finalUrl = getConvertUrl(url, fileType, destFileType);
     try {
       const results = await api(finalUrl);
       setLoading(false);
@@ -347,7 +346,7 @@ export default function Home() {
           </CopyToClipboard>
           <div className={classes.buttonGrow} />
           <Button
-            onClick={handleGenerate.bind(null, url, fileType, destFileType)}
+            onClick={handleGenerate.bind(null, convertUrl)}
             variant="contained"
             color="primary"
             disabled={isLoading}

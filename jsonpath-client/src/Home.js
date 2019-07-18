@@ -168,9 +168,8 @@ export default function Home() {
     setJsonpath(theJsonpath);
     setJsonpathUrl(getJsonpathUrl(newUrl, theFileType, theJsonpath));
   };
-  const handleGenerate = async (url, fileType, destFileType) => {
+  const handleGenerate = async finalUrl => {
     setLoading(true);
-    const finalUrl = getJsonpathUrl(url, fileType, destFileType);
     try {
       const results = await api(finalUrl);
       setLoading(false);
@@ -339,7 +338,7 @@ export default function Home() {
           </CopyToClipboard>
           <div className={classes.buttonGrow} />
           <Button
-            onClick={handleGenerate.bind(null, url, fileType, jsonpath)}
+            onClick={handleGenerate.bind(null, jsonpathUrl)}
             variant="contained"
             color="primary"
             disabled={isLoading}

@@ -174,9 +174,8 @@ export default function Home() {
     }
     setMergedUrl(getMergedUrl(newUrls, theFileType));
   };
-  const handleGenerate = async (urls, fileType) => {
+  const handleGenerate = async finalUrl => {
     setLoading(true);
-    const finalUrl = getMergedUrl(urls, fileType);
     try {
       const results = await api(finalUrl);
       setLoading(false);
@@ -381,7 +380,7 @@ export default function Home() {
           </CopyToClipboard>
           <div className={classes.buttonGrow} />
           <Button
-            onClick={handleGenerate.bind(null, urls, fileType)}
+            onClick={handleGenerate.bind(null, mergedUrl)}
             variant="contained"
             color="primary"
             disabled={isLoading}

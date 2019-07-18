@@ -70,6 +70,7 @@ async function convert(url, options) {
       }
       return finalResult;
     } catch (error) {
+      console.log("err", error);
       throw error;
     }
   } else {

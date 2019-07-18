@@ -168,9 +168,8 @@ export default function Home() {
     setTemplate(theTemplate);
     setTemplateUrl(getTemplateUrl(newUrl, theFileType, theTemplate));
   };
-  const handleGenerate = async (url, fileType, destFileType) => {
+  const handleGenerate = async finalUrl => {
     setLoading(true);
-    const finalUrl = getTemplateUrl(url, fileType, destFileType);
     try {
       const results = await api(finalUrl);
       setLoading(false);
@@ -203,6 +202,7 @@ export default function Home() {
 
     setUrl(newUrl);
     const autoFileType = getAutoFileType(newUrl);
+    // eslint-disable-next-line
     const sampleValue = "${$.foo.bar}";
     setFileType(autoFileType);
     setTemplate(sampleValue);
@@ -351,7 +351,7 @@ export default function Home() {
           </CopyToClipboard>
           <div className={classes.buttonGrow} />
           <Button
-            onClick={handleGenerate.bind(null, url, fileType, template)}
+            onClick={handleGenerate.bind(null, templateUrl)}
             variant="contained"
             color="primary"
             disabled={isLoading}
