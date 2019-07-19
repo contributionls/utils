@@ -2,6 +2,6 @@
 
 - [x] Init the framework
 - [x] Finish the merge api
-- [ ] Finish the merge ui
-- [ ] Finish the home ui
-- [ ] Finish the deploy
+- [x] Finish the merge ui
+- [x] Finish the home ui
+- [x] Finish the deploy
