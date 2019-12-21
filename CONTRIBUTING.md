@@ -17,10 +17,17 @@ make start
 make stop
 ```
 
+If you want install new package, you should enter the container:
+
+```bash
+make merge
+```
+
 Then,it'll watch the file's changes,and auto restart or refresh
 
 The home client dev url is <http://localhost:8080>
 The merge client dev url is <http://localhost:3000>
+The conver client dev url is <http://localhost:3001>
 The server dev url is <http://localhost:4000>
 
 ## 🔧 Running the tests <a name = "tests"></a>

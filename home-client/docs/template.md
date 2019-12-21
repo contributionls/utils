@@ -7,6 +7,7 @@ Use your yaml,json,ini config from url,render your template,and give you a new j
 ## Getting Started
 
 1. You can visit this site to generate and preview a final url online: <https://template.utils.men>
+1. You can use the [npm package](https://www.npmjs.com/package/@contributionls/utils-cli) to generate the final url: `npx @contributionls/utils-cli template -u url -t ${$.foo.bar}`
 1. You can also build the final url by yourself,here is the url pattern:
 
 ```bash

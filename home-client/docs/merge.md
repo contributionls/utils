@@ -7,6 +7,7 @@ Merge your yaml,json,ini config from url online,and give you a new config url.
 ## Getting Started
 
 1. You can visit this site to generate and preview a final url online: <https://merge.utils.men>
+1. You can use the [npm package](https://www.npmjs.com/package/@contributionls/utils-cli) to generate the final url: `npx @contributionls/utils-cli merge -u url1 -u url2`
 1. You can also build the final url by yourself,here is the url pattern:
 
 ```bash

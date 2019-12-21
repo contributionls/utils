@@ -7,6 +7,7 @@ Convert your yaml,json,ini config from url online,and give you a new jsonpath co
 ## Getting Started
 
 1. You can visit this site to generate and preview a final url online: <https://jsonpath.utils.men>
+1. You can use the [npm package](https://www.npmjs.com/package/@contributionls/utils-cli) to generate the final url: `npx @contributionls/utils-cli jsonpath -u url -j $.foo`
 1. You can also build the final url by yourself,here is the url pattern:
 
 ```bash

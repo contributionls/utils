@@ -1,3 +1,5 @@
 {
+    "prettier.requireConfig": true,
+    "eslint.format.enable": true,
     "editor.formatOnSave": true
 }

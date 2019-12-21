@@ -9,5 +9,13 @@ module.exports = {
     editLinks: true,
     nav: [{ text: "Home", link: "/" }],
     sidebar: ["/", "/merge", "/convert", "/jsonpath", "/template"]
-  }
+  },
+  plugins: [
+    [
+      '@vuepress/google-analytics',
+      {
+        'ga': 'UA-144863614-3' // UA-00000000-0
+      }
+    ]
+  ]
 };
