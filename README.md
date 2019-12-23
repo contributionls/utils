@@ -17,7 +17,7 @@
 ---
 
 <p align="center"> I want offer some online utils for you.
-    <br> 
+    <br>
 </p>
 
 ## 📝 Table of Contents
@@ -47,6 +47,12 @@ Now we offer follows tools:
 ## 🎈 Usage <a name="usage"></a>
 
 Visit [Document](https://utils.men)
+
+## Deployment <a name="deployment"></a>
+
+```bash
+make deploy
+```
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
